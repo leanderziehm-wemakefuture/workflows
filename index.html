@@ -49,32 +49,32 @@
     const workflows = [
   {
     "name": "Create Task for Unsatisfied Customer",
-    "file": "Create Task for Unsatisfied Customer.json",
+    "file": "Create_Task_for_Unsatisfied_Customer.json",
     "description": "Monitor emails mood. When an email with a negative mood is received, this scenario should create a task to solve the problem or compensate the affected customer."
   },
   {
     "name": "Calculate the Distance Between the Production and Delivery Address",
-    "file": "Dynamically Calculate Price.json",
+    "file": "Dynamically_Calculate_Price.json",
     "description": "Given the address of a customer, calculate the distance and determine which price range they are in."
   },
   {
     "name": "Encrypt PDF files in a cloud directory",
-    "file": "Encrypt files blueprint.json",
+    "file": "Encrypt_files_blueprint.json",
     "description": "Monitor a cloud directory (Google Drive in this case, but can be any other). If a pdf is added there, encrypt it using 0CodeKit, and replace the old one with the encrypted one."
   },
   {
     "name": "Merge documents fetched from different systems. E.g. grades and certificates.",
-    "file": "create and merge pdfs.json",
+    "file": "create_and_merge_pdfs.json",
     "description": "Monitor websites of interests periodically, use 0CodeKit to compose a pdf report."
   },
   {
     "name": "Transcribe audio",
-    "file": "Transcribe audio.json",
+    "file": "Transcribe_audio.json",
     "description": "Receives an audio file, transcribe it and resend it."
   },
   {
     "name": "Translate Email Content",
-    "file": "Translate Email Content Blueprint.json",
+    "file": "Translate_Email_Content Blueprint.json",
     "description": "Watch for any new email and detect in which language they are. If it is not in the desired language, translate it and resend it to the same account."
   },
   {
@@ -93,8 +93,13 @@
     "description": ""
   },
   {
-    "name": "Schedule automatic appointment notifications",
-    "file": "send_notification.json / schedule_notification.json",
+    "name": "send_notification",
+    "file": "send_notification.json ",
+    "description": "Watch a spreadsheet with appointments. If a new row (new appointment) is created, schedule a notification. This workflow consists of two scenarios: the first one is triggered when an appointment is booked. And schedules a call to the second one the day before the appointment."
+  },
+    {
+    "name": "schedule_notification.",
+    "file": "schedule_notification.json",
     "description": "Watch a spreadsheet with appointments. If a new row (new appointment) is created, schedule a notification. This workflow consists of two scenarios: the first one is triggered when an appointment is booked. And schedules a call to the second one the day before the appointment."
   },
   {
@@ -109,12 +114,12 @@
   },
   {
     "name": "Redact sensitive information from PDF file",
-    "file": "blueprint (1).json",
+    "file": "blueprint_1.json",
     "description": "Downloads a PDF and redacts the sensitive data before uploading again."
   },
   {
     "name": "Merge audio and video",
-    "file": "blueprint (43).json",
+    "file": "blueprint_43.json",
     "description": "Generates a video from a picture and adds an AI-generated audio track to it. The result is a fully AI generated video with audio."
   }
 ];
