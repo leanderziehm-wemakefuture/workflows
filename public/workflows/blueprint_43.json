@@ -1,0 +1,554 @@
+{
+    "name": "Merge Audio File",
+    "flow": [
+        {
+            "id": 1,
+            "module": "dumplingai:generateAiImageFluxDev",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 5049
+            },
+            "mapper": {
+                "prompt": "Santa flying with his slope and Rendeers to prague along the Make office",
+                "go_fast": true,
+                "guidance": "3",
+                "megapixels": "1",
+                "num_outputs": "1",
+                "aspect_ratio": "16:9",
+                "output_format": "jpg",
+                "output_quality": "80",
+                "prompt_strength": "0.8",
+                "num_inference_steps": "28",
+                "disable_safety_checker": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": -389,
+                    "y": 266
+                },
+                "restore": {
+                    "expect": {
+                        "go_fast": {
+                            "mode": "chose"
+                        },
+                        "megapixels": {
+                            "mode": "chose",
+                            "label": "1 MP"
+                        },
+                        "aspect_ratio": {
+                            "mode": "chose",
+                            "label": "16:9"
+                        },
+                        "output_format": {
+                            "mode": "chose",
+                            "label": "JPG"
+                        },
+                        "disable_safety_checker": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "dumplingai"
+                            },
+                            "label": "SEB (Make.com Integration)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:dumplingai",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "prompt",
+                        "type": "text",
+                        "label": "Prompt",
+                        "required": true
+                    },
+                    {
+                        "name": "seed",
+                        "type": "number",
+                        "label": "Seed"
+                    },
+                    {
+                        "name": "image",
+                        "type": "text",
+                        "label": "Input Image URL"
+                    },
+                    {
+                        "name": "prompt_strength",
+                        "type": "number",
+                        "label": "Prompt Strength"
+                    },
+                    {
+                        "name": "num_outputs",
+                        "type": "number",
+                        "label": "Number of Outputs"
+                    },
+                    {
+                        "name": "num_inference_steps",
+                        "type": "number",
+                        "label": "Number of Inference Steps"
+                    },
+                    {
+                        "name": "guidance",
+                        "type": "number",
+                        "label": "Guidance Scale"
+                    },
+                    {
+                        "name": "aspect_ratio",
+                        "type": "select",
+                        "label": "Aspect Ratio",
+                        "validate": {
+                            "enum": [
+                                "1:1",
+                                "16:9",
+                                "21:9",
+                                "3:2",
+                                "2:3",
+                                "4:5",
+                                "5:4",
+                                "3:4",
+                                "4:3",
+                                "9:16",
+                                "9:21"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "output_format",
+                        "type": "select",
+                        "label": "Output Format",
+                        "validate": {
+                            "enum": [
+                                "webp",
+                                "jpg",
+                                "png"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "output_quality",
+                        "type": "number",
+                        "label": "Output Quality"
+                    },
+                    {
+                        "name": "disable_safety_checker",
+                        "type": "boolean",
+                        "label": "Disable Safety Checker"
+                    },
+                    {
+                        "name": "go_fast",
+                        "type": "boolean",
+                        "label": "Go Fast"
+                    },
+                    {
+                        "name": "megapixels",
+                        "type": "select",
+                        "label": "Megapixels",
+                        "validate": {
+                            "enum": [
+                                "1",
+                                "0.25"
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "runway-ml-api:imageToVideo",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 5044
+            },
+            "mapper": {
+                "ratio": "16:9",
+                "duration": "5",
+                "watermark": false,
+                "promptText": "Santa flying with his slope and Rendeers to prague along the Make office",
+                "promptImage": "{{1.images[].url}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": -95,
+                    "y": 255
+                },
+                "restore": {
+                    "expect": {
+                        "ratio": {
+                            "mode": "chose",
+                            "label": "16:9"
+                        },
+                        "duration": {
+                            "mode": "chose",
+                            "label": "5"
+                        },
+                        "watermark": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "runway-ml-api"
+                            },
+                            "label": "SEB"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:runway-ml-api",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "promptImage",
+                        "type": "text",
+                        "label": "Prompt image URL",
+                        "required": true
+                    },
+                    {
+                        "name": "promptText",
+                        "type": "text",
+                        "label": "Prompt text",
+                        "validate": {
+                            "max": 512
+                        }
+                    },
+                    {
+                        "name": "duration",
+                        "type": "select",
+                        "label": "Duration",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "5",
+                                "10"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "ratio",
+                        "type": "select",
+                        "label": "Ratio",
+                        "validate": {
+                            "enum": [
+                                "16:9",
+                                "9:16"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "seed",
+                        "type": "integer",
+                        "label": "Seed"
+                    },
+                    {
+                        "name": "watermark",
+                        "type": "boolean",
+                        "label": "Watermark"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "elevenlabs:createTextToSpeech",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 5050
+            },
+            "mapper": {
+                "text": "We wish you a merry christmes and a happy new year.",
+                "model_id": "eleven_flash_v2_5",
+                "voice_id": "7p1Ofvcwsv7UBPoFNcpI",
+                "voice_settings": {}
+            },
+            "metadata": {
+                "designer": {
+                    "x": 197,
+                    "y": 245
+                },
+                "restore": {
+                    "expect": {
+                        "model_id": {
+                            "mode": "chose",
+                            "label": "Eleven Flash v2.5 (eleven_flash_v2_5)"
+                        },
+                        "voice_id": {
+                            "mode": "chose",
+                            "label": "professional/Julian - deep rich mature British voice"
+                        },
+                        "optimize_streaming_latency": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "elevenlabs"
+                            },
+                            "label": "My ElevenLabs connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:elevenlabs",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "voice_id",
+                        "type": "select",
+                        "label": "Voice",
+                        "required": true
+                    },
+                    {
+                        "name": "model_id",
+                        "type": "select",
+                        "label": "Model",
+                        "required": true
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    },
+                    {
+                        "name": "voice_settings",
+                        "spec": [
+                            {
+                                "name": "stability",
+                                "type": "number",
+                                "label": "Stability",
+                                "validate": {
+                                    "max": 1,
+                                    "min": 0
+                                }
+                            },
+                            {
+                                "name": "similarity_boost",
+                                "type": "number",
+                                "label": "Similarity Boost",
+                                "validate": {
+                                    "max": 1,
+                                    "min": 0
+                                }
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Voice Settings"
+                    },
+                    {
+                        "name": "optimize_streaming_latency",
+                        "type": "select",
+                        "label": "Optimize Streaming Latency",
+                        "validate": {
+                            "enum": [
+                                "0",
+                                "1",
+                                "2",
+                                "3",
+                                "4"
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 4,
+            "module": "onesaas:storagetempadd",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 5051
+            },
+            "mapper": {
+                "buffer": "{{3.data}}",
+                "fileName": "{{3.fileName}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 508,
+                    "y": 241
+                },
+                "restore": {
+                    "expect": {
+                        "otherInputParameters": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            },
+                            "label": "My 0-CodeKit connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "otherInputParameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Other Input Parameters"
+                    },
+                    {
+                        "name": "buffer",
+                        "type": "buffer",
+                        "label": "File",
+                        "required": true
+                    },
+                    {
+                        "name": "fileName",
+                        "type": "text",
+                        "label": "File Name",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 5,
+            "module": "onesaas:mergeVideoAudio",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 5051
+            },
+            "mapper": {
+                "audio": "{{4.url}}",
+                "video": "{{2.output[]}}",
+                "fileName": "Happy.mp4"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 802,
+                    "y": 242
+                },
+                "restore": {
+                    "expect": {
+                        "otherInputParameters": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            },
+                            "label": "My 0-CodeKit connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "otherInputParameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Other Input Parameters"
+                    },
+                    {
+                        "name": "video",
+                        "type": "text",
+                        "label": "Video",
+                        "required": true
+                    },
+                    {
+                        "name": "audio",
+                        "type": "text",
+                        "label": "Audio",
+                        "required": true
+                    },
+                    {
+                        "name": "fileName",
+                        "type": "text",
+                        "label": "File Name"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "we.make.com",
+        "notes": []
+    }
+}

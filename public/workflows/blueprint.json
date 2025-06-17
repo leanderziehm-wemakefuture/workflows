@@ -1,0 +1,918 @@
+{
+    "name": "Replace Background and Add Watermark",
+    "flow": [
+        {
+            "id": 2,
+            "module": "dropbox:watchFiles2",
+            "version": 5,
+            "parameters": {
+                "__IMTCONN__": 2889426,
+                "undefined": "list",
+                "recursive": false,
+                "limit": 1,
+                "path": "/products_source_image"
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": -34,
+                    "y": 47
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My Dropbox connection (slema@wemakefuture.com)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "dropbox"
+                            }
+                        },
+                        "undefined": {
+                            "label": "Select from List"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:dropbox",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "type": "select",
+                        "label": "Folder Search Method",
+                        "validate": {
+                            "enum": [
+                                "list",
+                                "keyword"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "recursive",
+                        "type": "boolean",
+                        "label": "Watch also subfolders",
+                        "required": true
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "path",
+                        "type": "folder",
+                        "label": "Folder Path"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 6,
+            "module": "dropbox:createShareLink",
+            "version": 5,
+            "parameters": {
+                "__IMTCONN__": 2889426
+            },
+            "mapper": {
+                "select": "map",
+                "settings": {
+                    "access": "max",
+                    "allow_download": true
+                },
+                "path": "{{2.path_lower}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 277,
+                    "y": 45
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My Dropbox connection (slema@wemakefuture.com)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "dropbox"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "select": {
+                            "label": "Map a file/folder path"
+                        },
+                        "settings": {
+                            "nested": {
+                                "access": {
+                                    "mode": "chose",
+                                    "label": "Max Access"
+                                },
+                                "require_password": {
+                                    "mode": "chose"
+                                },
+                                "allow_download": {
+                                    "mode": "chose"
+                                },
+                                "requested_visibility": {
+                                    "mode": "chose",
+                                    "label": "Empty"
+                                }
+                            }
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:dropbox",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Way of selecting files",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "file"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "settings",
+                        "type": "collection",
+                        "label": "Settings",
+                        "spec": [
+                            {
+                                "name": "access",
+                                "type": "select",
+                                "label": "Link's Access Level",
+                                "validate": {
+                                    "enum": [
+                                        "viewer",
+                                        "editor",
+                                        "max"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "expires",
+                                "type": "date",
+                                "label": "Link's Expiration Date",
+                                "time": true
+                            },
+                            {
+                                "name": "require_password",
+                                "type": "boolean",
+                                "label": "Require Password"
+                            },
+                            {
+                                "name": "link_password",
+                                "type": "text",
+                                "label": "Link's Password"
+                            },
+                            {
+                                "name": "allow_download",
+                                "type": "boolean",
+                                "label": "Allow Download"
+                            },
+                            {
+                                "name": "requested_visibility",
+                                "type": "select",
+                                "label": "Requested Visibility (Deprecated)",
+                                "validate": {
+                                    "enum": [
+                                        "public",
+                                        "team_only",
+                                        "password"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "path",
+                        "type": "text",
+                        "label": "File Path",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 7,
+            "module": "onesaas:removeBackgroundFromImage",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2940965
+            },
+            "mapper": {
+                "url": "{{6.downloadUrl}}",
+                "getAsUrl": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 577,
+                    "y": 45
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Santi2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "otherInputParameters": {
+                            "mode": "chose"
+                        },
+                        "getAsUrl": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "otherInputParameters",
+                        "type": "array",
+                        "label": "Other Input Parameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "url",
+                        "type": "text",
+                        "label": "Image Url"
+                    },
+                    {
+                        "name": "getAsUrl",
+                        "type": "boolean",
+                        "label": "Get As URL",
+                        "required": true
+                    },
+                    {
+                        "name": "otherInputParameters",
+                        "type": "array",
+                        "label": "Other Input Parameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "url",
+                        "type": "text",
+                        "label": "Image Url"
+                    },
+                    {
+                        "name": "getAsUrl",
+                        "type": "boolean",
+                        "label": "Get As URL",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 10,
+            "module": "dropbox:createShareLink",
+            "version": 5,
+            "parameters": {
+                "__IMTCONN__": 2889426
+            },
+            "mapper": {
+                "select": "file",
+                "settings": {
+                    "allow_download": true
+                },
+                "select_1": "file",
+                "path": "/background/background.webp"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 898,
+                    "y": 53,
+                    "name": "Get Background"
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My Dropbox connection (slema@wemakefuture.com)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "dropbox"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "select": {
+                            "label": "Select a file/folder"
+                        },
+                        "settings": {
+                            "nested": {
+                                "access": {
+                                    "mode": "chose",
+                                    "label": "Empty"
+                                },
+                                "require_password": {
+                                    "mode": "chose"
+                                },
+                                "allow_download": {
+                                    "mode": "chose"
+                                },
+                                "requested_visibility": {
+                                    "mode": "chose",
+                                    "label": "Empty"
+                                }
+                            }
+                        },
+                        "select_1": {
+                            "label": "File"
+                        },
+                        "path": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:dropbox",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "select",
+                        "type": "select",
+                        "label": "Way of selecting files",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "map",
+                                "file"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "settings",
+                        "type": "collection",
+                        "label": "Settings",
+                        "spec": [
+                            {
+                                "name": "access",
+                                "type": "select",
+                                "label": "Link's Access Level",
+                                "validate": {
+                                    "enum": [
+                                        "viewer",
+                                        "editor",
+                                        "max"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "expires",
+                                "type": "date",
+                                "label": "Link's Expiration Date",
+                                "time": true
+                            },
+                            {
+                                "name": "require_password",
+                                "type": "boolean",
+                                "label": "Require Password"
+                            },
+                            {
+                                "name": "link_password",
+                                "type": "text",
+                                "label": "Link's Password"
+                            },
+                            {
+                                "name": "allow_download",
+                                "type": "boolean",
+                                "label": "Allow Download"
+                            },
+                            {
+                                "name": "requested_visibility",
+                                "type": "select",
+                                "label": "Requested Visibility (Deprecated)",
+                                "validate": {
+                                    "enum": [
+                                        "public",
+                                        "team_only",
+                                        "password"
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "select_1",
+                        "type": "select",
+                        "label": "Select",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "file",
+                                "folder"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "path",
+                        "type": "file",
+                        "label": "File",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 11,
+            "module": "onesaas:imageOverlayTwoImages",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2940965
+            },
+            "mapper": {
+                "frontImageUrl": "{{7.url}}",
+                "backImageUrl": "{{10.downloadUrl}}",
+                "getAsUrl": true,
+                "position": "center",
+                "options": {}
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1198,
+                    "y": 53
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Santi2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "otherInputParameters": {
+                            "mode": "chose"
+                        },
+                        "getAsUrl": {
+                            "mode": "chose"
+                        },
+                        "position": {
+                            "mode": "chose",
+                            "label": "Center"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "otherInputParameters",
+                        "type": "array",
+                        "label": "Other Input Parameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "frontImageUrl",
+                        "type": "text",
+                        "label": "Front Image URL",
+                        "required": true
+                    },
+                    {
+                        "name": "backImageUrl",
+                        "type": "text",
+                        "label": "Back Image URL",
+                        "required": true
+                    },
+                    {
+                        "name": "getAsUrl",
+                        "type": "boolean",
+                        "label": "Get As URL",
+                        "required": true
+                    },
+                    {
+                        "name": "position",
+                        "type": "select",
+                        "label": "Position",
+                        "validate": {
+                            "enum": [
+                                "center",
+                                "top-left",
+                                "top-right",
+                                "bottom-left",
+                                "bottom-right"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "options",
+                        "type": "collection",
+                        "label": "Options",
+                        "spec": [
+                            {
+                                "name": "opacity",
+                                "type": "number",
+                                "label": "Opacity"
+                            },
+                            {
+                                "name": "verticalPosition",
+                                "type": "number",
+                                "label": "Vertical Position"
+                            },
+                            {
+                                "name": "horizontalPosition",
+                                "type": "number",
+                                "label": "Horizontal Position"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 15,
+            "module": "onesaas:imageResize",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2940965
+            },
+            "mapper": {
+                "url": "https://cdn.prod.website-files.com/645f67d81d24ee1f991f6c92/6470f918abd315329b01a419_0codekit%20formerly%201saas%20logo.png",
+                "width": "433",
+                "height": "144",
+                "getAsUrl": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1498,
+                    "y": 53
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Santi2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "otherInputParameters": {
+                            "mode": "chose"
+                        },
+                        "fit": {
+                            "mode": "chose",
+                            "label": "Empty"
+                        },
+                        "getAsUrl": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "otherInputParameters",
+                        "type": "array",
+                        "label": "Other Input Parameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "Image File URL",
+                        "required": true
+                    },
+                    {
+                        "name": "width",
+                        "type": "number",
+                        "label": "Width"
+                    },
+                    {
+                        "name": "height",
+                        "type": "number",
+                        "label": "Height"
+                    },
+                    {
+                        "name": "fit",
+                        "type": "select",
+                        "label": "Fit",
+                        "validate": {
+                            "enum": [
+                                "cover",
+                                "contain",
+                                "fill",
+                                "inside",
+                                "outside"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "getAsUrl",
+                        "type": "boolean",
+                        "label": "Get As URL",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 13,
+            "module": "onesaas:imageOverlayTwoImages",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2940965
+            },
+            "mapper": {
+                "frontImageUrl": "{{15.url}}",
+                "backImageUrl": "{{11.url}}",
+                "getAsUrl": false,
+                "position": "bottom-left",
+                "options": {
+                    "opacity": "0.4"
+                }
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1798,
+                    "y": 53
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "Santi2",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "otherInputParameters": {
+                            "mode": "chose"
+                        },
+                        "getAsUrl": {
+                            "mode": "chose"
+                        },
+                        "position": {
+                            "mode": "chose",
+                            "label": "Bottom-Left"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "otherInputParameters",
+                        "type": "array",
+                        "label": "Other Input Parameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "frontImageUrl",
+                        "type": "text",
+                        "label": "Front Image URL",
+                        "required": true
+                    },
+                    {
+                        "name": "backImageUrl",
+                        "type": "text",
+                        "label": "Back Image URL",
+                        "required": true
+                    },
+                    {
+                        "name": "getAsUrl",
+                        "type": "boolean",
+                        "label": "Get As URL",
+                        "required": true
+                    },
+                    {
+                        "name": "position",
+                        "type": "select",
+                        "label": "Position",
+                        "validate": {
+                            "enum": [
+                                "center",
+                                "top-left",
+                                "top-right",
+                                "bottom-left",
+                                "bottom-right"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "options",
+                        "type": "collection",
+                        "label": "Options",
+                        "spec": [
+                            {
+                                "name": "opacity",
+                                "type": "number",
+                                "label": "Opacity"
+                            },
+                            {
+                                "name": "verticalPosition",
+                                "type": "number",
+                                "label": "Vertical Position"
+                            },
+                            {
+                                "name": "horizontalPosition",
+                                "type": "number",
+                                "label": "Horizontal Position"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "id": 16,
+            "module": "dropbox:uploadLargeFile",
+            "version": 5,
+            "parameters": {
+                "__IMTCONN__": 2889426
+            },
+            "mapper": {
+                "path": "/destination-documents",
+                "filename": "edited_{{2.name}}",
+                "data": "{{13.data}}",
+                "overwrite": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 2098,
+                    "y": 53
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My Dropbox connection (slema@wemakefuture.com)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "dropbox"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "path": {
+                            "mode": "chose"
+                        },
+                        "overwrite": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:dropbox",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "path",
+                        "type": "folder",
+                        "label": "Folder",
+                        "required": true
+                    },
+                    {
+                        "name": "filename",
+                        "type": "filename",
+                        "label": "File Name",
+                        "required": true
+                    },
+                    {
+                        "name": "data",
+                        "type": "buffer",
+                        "label": "Data",
+                        "required": true
+                    },
+                    {
+                        "name": "overwrite",
+                        "type": "boolean",
+                        "label": "Overwrite an existing file",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com"
+    }
+}

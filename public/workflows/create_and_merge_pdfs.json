@@ -1,0 +1,655 @@
+{
+    "name": "create merged pdfs from URLs_@cchelagat",
+    "flow": [
+        {
+            "id": 14,
+            "module": "datastore:SearchRecord",
+            "version": 1,
+            "parameters": {
+                "limit": null,
+                "datastore": 57856,
+                "continueWhenNoRes": false
+            },
+            "mapper": {
+                "sort": [],
+                "filter": [],
+                "mappAbleLimit": ""
+            },
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "datastore": {
+                            "label": "My URLs Data Store"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "datastore",
+                        "type": "datastore",
+                        "label": "Data store",
+                        "required": true
+                    },
+                    {
+                        "name": "continueWhenNoRes",
+                        "type": "boolean",
+                        "label": "Continue the execution of the route even if the module returns no results"
+                    },
+                    {
+                        "name": "limit",
+                        "type": "uinteger",
+                        "label": "Limit"
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "filter",
+                        "type": "filter",
+                        "label": "Filter",
+                        "options": "rpc://datastore/1.10.14/RpcGetUDTKeys",
+                        "required": true
+                    },
+                    {
+                        "name": "sort",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "select",
+                                "label": "Key",
+                                "dynamic": true,
+                                "options": [],
+                                "required": true
+                            },
+                            {
+                                "name": "order",
+                                "type": "select",
+                                "label": "Order",
+                                "options": [
+                                    {
+                                        "label": "Ascending",
+                                        "value": 1
+                                    },
+                                    {
+                                        "label": "Descending",
+                                        "value": -1
+                                    }
+                                ],
+                                "required": true
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Sort"
+                    },
+                    {
+                        "name": "mappAbleLimit",
+                        "type": "uinteger",
+                        "label": "Mappable Limit"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "__IMTLENGTH__",
+                        "type": "uinteger",
+                        "label": "Total number of bundles"
+                    },
+                    {
+                        "name": "__IMTINDEX__",
+                        "type": "uinteger",
+                        "label": "Bundle order position"
+                    },
+                    {
+                        "name": "key",
+                        "type": "text",
+                        "label": "Key"
+                    },
+                    {
+                        "name": "data",
+                        "spec": [
+                            {
+                                "name": "Website Name",
+                                "type": "text",
+                                "label": null,
+                                "default": null,
+                                "required": true,
+                                "multiline": false
+                            },
+                            {
+                                "name": "URL",
+                                "type": "text",
+                                "label": null,
+                                "default": null,
+                                "required": false,
+                                "multiline": false
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 15,
+            "module": "util:SetVariables",
+            "version": 1,
+            "parameters": {},
+            "mapper": {
+                "variables": [
+                    {
+                        "name": "Urls",
+                        "value": "{{14.data.URL}}"
+                    }
+                ],
+                "scope": "roundtrip"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "variables": {
+                            "items": [
+                                null
+                            ]
+                        },
+                        "scope": {
+                            "label": "One cycle"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "variables",
+                        "type": "array",
+                        "label": "Variables",
+                        "spec": [
+                            {
+                                "name": "name",
+                                "label": "Variable name",
+                                "type": "text",
+                                "required": true
+                            },
+                            {
+                                "name": "value",
+                                "label": "Variable value",
+                                "type": "any"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "scope",
+                        "type": "select",
+                        "label": "Variable lifetime",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "roundtrip",
+                                "execution"
+                            ]
+                        }
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "Urls",
+                        "label": "Urls",
+                        "type": "any"
+                    }
+                ],
+                "advanced": true
+            }
+        },
+        {
+            "id": 16,
+            "module": "onesaas:pdfhtml",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2798940
+            },
+            "mapper": {
+                "from": "url",
+                "switch": "{{15.Urls}}",
+                "options": {
+                    "margin": {}
+                },
+                "getAsUrl": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "from": {
+                            "label": "URL"
+                        },
+                        "options": {
+                            "nested": {
+                                "format": {
+                                    "mode": "chose",
+                                    "label": "Empty"
+                                },
+                                "landscape": {
+                                    "mode": "chose"
+                                },
+                                "printBackground": {
+                                    "mode": "chose"
+                                }
+                            }
+                        },
+                        "getAsUrl": {
+                            "mode": "chose"
+                        },
+                        "otherInputParameters": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            },
+                            "label": "My 0-CodeKit connection (Kate)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "otherInputParameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ],
+                        "type": "array",
+                        "label": "Other Input Parameters"
+                    },
+                    {
+                        "name": "from",
+                        "type": "select",
+                        "label": "HTML Code or URL",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "url",
+                                "html"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "getAsUrl",
+                        "type": "boolean",
+                        "label": "Get As URL",
+                        "required": true
+                    },
+                    {
+                        "name": "options",
+                        "spec": [
+                            {
+                                "name": "scale",
+                                "type": "number",
+                                "label": "Scale"
+                            },
+                            {
+                                "name": "landscape",
+                                "type": "boolean",
+                                "label": "Landscape"
+                            },
+                            {
+                                "name": "printBackground",
+                                "type": "boolean",
+                                "label": "Print background images"
+                            },
+                            {
+                                "name": "format",
+                                "type": "select",
+                                "label": "Format",
+                                "validate": {
+                                    "enum": [
+                                        "Letter",
+                                        "Legal",
+                                        "Tabloid",
+                                        "Ledger",
+                                        "A0",
+                                        "A1",
+                                        "A2",
+                                        "A3",
+                                        "A4",
+                                        "A5",
+                                        "A6"
+                                    ]
+                                }
+                            },
+                            {
+                                "name": "width",
+                                "type": "text",
+                                "label": "Width"
+                            },
+                            {
+                                "name": "height",
+                                "type": "text",
+                                "label": "Height"
+                            },
+                            {
+                                "name": "margin",
+                                "spec": [
+                                    {
+                                        "name": "top",
+                                        "type": "integer",
+                                        "label": "Top"
+                                    },
+                                    {
+                                        "name": "right",
+                                        "type": "integer",
+                                        "label": "Right"
+                                    },
+                                    {
+                                        "name": "bottom",
+                                        "type": "integer",
+                                        "label": "Bottom"
+                                    },
+                                    {
+                                        "name": "left",
+                                        "type": "integer",
+                                        "label": "Left"
+                                    }
+                                ],
+                                "type": "collection"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Options"
+                    },
+                    {
+                        "name": "switch",
+                        "type": "url",
+                        "label": "URL",
+                        "required": true
+                    }
+                ]
+            }
+        },
+        {
+            "id": 20,
+            "module": "builtin:BasicAggregator",
+            "version": 1,
+            "parameters": {
+                "target": "17.files",
+                "feeder": 14
+            },
+            "mapper": {
+                "sourceType": "url",
+                "pages": "",
+                "url": "{{16.url}}"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 900,
+                    "y": 0
+                },
+                "restore": {
+                    "expect": {
+                        "__IMTTARGET__": {
+                            "nested": {
+                                "sourceType": {
+                                    "mode": "chose",
+                                    "label": "PDF File URL"
+                                },
+                                "pages": {
+                                    "mode": "chose",
+                                    "label": "Empty"
+                                }
+                            }
+                        }
+                    },
+                    "extra": {
+                        "feeder": {
+                            "label": "Data store - Search records [14]"
+                        },
+                        "target": {
+                            "label": "Files"
+                        }
+                    }
+                },
+                "expect": [
+                    {
+                        "name": "sourceType",
+                        "type": "select",
+                        "label": "Source Type",
+                        "required": true,
+                        "validate": {
+                            "enum": [
+                                "buffer",
+                                "url"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "url",
+                        "type": "url",
+                        "label": "PDF File URL"
+                    },
+                    {
+                        "name": "pages",
+                        "type": "select",
+                        "label": "Pages",
+                        "validate": {
+                            "enum": [
+                                "range",
+                                "specificPages"
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "id": 17,
+            "module": "onesaas:pdfmerge",
+            "version": 2,
+            "parameters": {
+                "__IMTCONN__": 2798940
+            },
+            "mapper": {
+                "files": "{{20.array}}",
+                "getAsUrl": true
+            },
+            "metadata": {
+                "designer": {
+                    "x": 1200,
+                    "y": 0
+                },
+                "restore": {
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "label": "My 0-CodeKit connection (Kate)",
+                            "data": {
+                                "scoped": "true",
+                                "connection": "onesaas2"
+                            }
+                        }
+                    },
+                    "expect": {
+                        "otherInputParameters": {
+                            "mode": "chose"
+                        },
+                        "files": {
+                            "mode": "edit",
+                            "items": [
+                                {
+                                    "sourceType": {
+                                        "mode": "chose",
+                                        "label": "PDF File URL"
+                                    },
+                                    "pages": {
+                                        "mode": "chose",
+                                        "label": "Empty"
+                                    }
+                                }
+                            ]
+                        },
+                        "getAsUrl": {
+                            "mode": "chose"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:onesaas2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "otherInputParameters",
+                        "type": "array",
+                        "label": "Other Input Parameters",
+                        "spec": [
+                            {
+                                "name": "key",
+                                "type": "text",
+                                "label": "Key"
+                            },
+                            {
+                                "name": "value",
+                                "type": "any",
+                                "label": "Value"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "files",
+                        "type": "array",
+                        "label": "Files",
+                        "required": true,
+                        "spec": [
+                            {
+                                "name": "sourceType",
+                                "type": "select",
+                                "label": "Source Type",
+                                "options": [
+                                    {
+                                        "label": "PDF File Buffer",
+                                        "value": "buffer",
+                                        "nested": [
+                                            {
+                                                "name": "buffer",
+                                                "type": "buffer",
+                                                "label": "PDF File",
+                                                "semantic": "file:data"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "PDF File URL",
+                                        "value": "url",
+                                        "nested": [
+                                            {
+                                                "name": "url",
+                                                "type": "url",
+                                                "label": "PDF File URL"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "required": true
+                            },
+                            {
+                                "name": "pages",
+                                "type": "select",
+                                "label": "Pages",
+                                "options": [
+                                    {
+                                        "label": "Range",
+                                        "value": "range",
+                                        "nested": [
+                                            {
+                                                "name": "startPage",
+                                                "type": "integer",
+                                                "label": "Start Page"
+                                            },
+                                            {
+                                                "name": "endPage",
+                                                "type": "integer",
+                                                "label": "End Page"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "label": "Specific Pages",
+                                        "value": "specificPages",
+                                        "nested": [
+                                            {
+                                                "name": "specificPages",
+                                                "spec": [
+                                                    {
+                                                        "name": "page",
+                                                        "type": "integer",
+                                                        "label": "Page"
+                                                    }
+                                                ],
+                                                "type": "array",
+                                                "label": "Specific Pages"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "getAsUrl",
+                        "type": "boolean",
+                        "label": "Get As URL",
+                        "required": true
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "eu1.make.com"
+    }
+}
